@@ -1,0 +1,30 @@
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_IEEE_802_11AF ieee_802_11af)
+
+FIND_PATH(
+    IEEE_802_11AF_INCLUDE_DIRS
+    NAMES ieee_802_11af/api.h
+    HINTS $ENV{IEEE_802_11AF_DIR}/include
+        ${PC_IEEE_802_11AF_INCLUDEDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/include
+          /usr/local/include
+          /usr/include
+)
+
+FIND_LIBRARY(
+    IEEE_802_11AF_LIBRARIES
+    NAMES gnuradio-ieee_802_11af
+    HINTS $ENV{IEEE_802_11AF_DIR}/lib
+        ${PC_IEEE_802_11AF_LIBDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
+          ${CMAKE_INSTALL_PREFIX}/lib64
+          /usr/local/lib
+          /usr/local/lib64
+          /usr/lib
+          /usr/lib64
+)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(IEEE_802_11AF DEFAULT_MSG IEEE_802_11AF_LIBRARIES IEEE_802_11AF_INCLUDE_DIRS)
+MARK_AS_ADVANCED(IEEE_802_11AF_LIBRARIES IEEE_802_11AF_INCLUDE_DIRS)
+

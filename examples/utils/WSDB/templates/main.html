@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('main') }}" method=post class=main>
+      <dl>
+        <dt>Available frequency (MHz): 
+        <dd><input type=text size=15 name=availableFreq>
+        <dt>Used frequency (MHz):
+        <dd><input type=text size=15 name=usedFreq>
+        <dd><input type=submit value=Update>
+      </dl>
+    </form>
+  {% endif %}
+	 <ul class=update>
+	 <table border="1" style="width:300px">
+	   <tr>
+	     <th></th>
+	     <th>Center frequencies (Mhz)</th> 
+	     <th>max DBm</th>
+	   </tr>
+	   <tr>
+	     <th>Available</th>
+	     <td>  {{ myAvailable }} </td>
+	     <td>-20</td>
+	   </tr>
+	   <tr>
+	     <th>Used</th>
+	     <td> {{ myUsed }} </td>		
+	     <td>N/A</td>
+	   </tr>
+	 </table>
+         </ul>
+{% endblock %}
+

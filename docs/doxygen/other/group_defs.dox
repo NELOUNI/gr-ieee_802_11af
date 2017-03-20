@@ -1,0 +1,7 @@
+/*!
+ * \defgroup block GNU Radio IEEE_802_11AF C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the IEEE_802_11AF GNU Radio
+ *        module are listed here or in the subcategories below.
+ *
+ */
+

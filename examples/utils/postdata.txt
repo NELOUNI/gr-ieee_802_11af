@@ -1,0 +1,16 @@
+{
+  "jsonrpc": "2.0",
+  "method": "spectrum.paws.getSpectrum",
+  "apiVersion": "v1explorer",
+  "params": {
+    "type": "AVAIL_SPECTRUM_REQ",
+    "version": "1.0",
+    "deviceDesc": { "serialNumber": "12345", "fccId": "TEST", "fccTvbdDeviceType": "MODE_1" },
+    "location": { "point": { "center": {"latitude": 38.8, "longitude": -77.6} } },
+    "antenna": { "height": 30.0, "heightType": "AGL" },
+    "owner": { "owner": { } },
+    "capabilities": { "frequencyRanges": [{ "startHz": 800000000, "stopHz": 850000000 }, { "startHz": 900000000, "stopHz": 950000000 }] },
+    "key": "AIzaSyABn-Yd6hRl95qLNVJqs4yW5y3Y8zltup8"
+  },
+  "id": "myString"
+}
