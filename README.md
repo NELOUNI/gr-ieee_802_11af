@@ -1,5 +1,4 @@
-# gr-ieee_802_11af
-USRP/GNU Radio Based ieee802.11af Implementation 
+USRP/GNU Radio Based IEEE 802.11af Implementation 
 =====================================================
 
 Hi!
