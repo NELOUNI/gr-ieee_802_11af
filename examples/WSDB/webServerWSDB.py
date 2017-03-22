@@ -40,7 +40,7 @@ def copyanything(src, dst):
 
 def init_db():
     """Creates the database tables."""
-    copyanything('utils/spectrumdB.back','utils/spectrumdB')
+    copyanything('spectrumdB.back','spectrumdB')
 
 @app.route('/logout')
 def logout():
@@ -56,7 +56,7 @@ def main():
   availableFreqs = ''
   usedFreqs = ''
   
-  fspectrumdB = open("utils/spectrumdB", )
+  fspectrumdB = open("spectrumdB", )
   for i, line in enumerate(fspectrumdB):
     if i == 0:
        availableFreqs = (line.split(": ")[1:][0]).split()
@@ -68,8 +68,8 @@ def main():
   if 'usedFreq:' in request.data:
       used = request.data.strip('usedFreq: ')
       print "used: ", used 	
-      fspectrumdB        = open("utils/spectrumdB", "r+")
-      fupdatedSpectrumdB = open("utils/updatedSpectrumdB", "w+")	 
+      fspectrumdB        = open("spectrumdB", "r+")
+      fupdatedSpectrumdB = open("updatedSpectrumdB", "w+")	 
       for i, line in enumerate(fspectrumdB):
     	  if i == 0:
 	     if used in line:
@@ -84,7 +84,7 @@ def main():
 	         fupdatedSpectrumdB.write(''.join([line.strip('\n'), " ", used]))
       fspectrumdB.close()
       fupdatedSpectrumdB.close()	    
-      os.rename('utils/updatedSpectrumdB','utils/spectrumdB')
+      os.rename('updatedSpectrumdB','spectrumdB')
       return redirect(url_for('update'))
 
   elif 'jsonrpc' in request.data:
@@ -131,8 +131,8 @@ def main():
 
   else:
      if (request.form['availableFreq'] != ''):
-        fupdatedSpectrumdB = open("utils/updatedSpectrumdB", "w+")
-        fspectrumdB = open("utils/spectrumdB", "r+")
+        fupdatedSpectrumdB = open("updatedSpectrumdB", "w+")
+        fspectrumdB = open("spectrumdB", "r+")
 	if request.form['availableFreq'] in availableFreqs:
 		pass
 	else:
@@ -143,11 +143,11 @@ def main():
 	fupdatedSpectrumdB.write(''.join(["UsedFreqs: ", " ".join(str(u) for u in usedFreqs)]))	
 	fspectrumdB.close()
      	fupdatedSpectrumdB.close()           
-	os.rename('utils/updatedSpectrumdB','utils/spectrumdB')
+	os.rename('updatedSpectrumdB','spectrumdB')
 
      elif (request.form['usedFreq'] != ''):
 	fupdatedSpectrumdB = open("updatedSpectrumdB", "w+")
-        fspectrumdB = open("utils/spectrumdB", "r+")
+        fspectrumdB = open("spectrumdB", "r+")
 	if request.form['usedFreq'] in usedFreqs :
 		pass
 	else:
@@ -158,7 +158,7 @@ def main():
 	fupdatedSpectrumdB.write(''.join(["UsedFreqs: ", " ".join(str(u) for u in usedFreqs)]))
      	fspectrumdB.close()
      	fupdatedSpectrumdB.close()           
-        os.rename('utils/updatedSpectrumdB','utils/spectrumdB')
+        os.rename('updatedSpectrumdB','spectrumdB')
      return redirect(url_for('update'))
 
 @app.route('/')
@@ -180,7 +180,7 @@ def update():
 if __name__ == '__main__':
 
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    #parser.add_option("-p","--port", type="int", default=5000)
+    parser.add_option("-p","--port", type="int", default=5000)
     parser.add_option("-s","--ssl", action="store_true", default=False,
                            help="Use of SSL Encryption")
     (options, args) = parser.parse_args()
@@ -188,14 +188,12 @@ if __name__ == '__main__':
     init_db()
     if not options.ssl:
 	print "Running without SSL Encryption"
-        #app.run(host='0.0.0.0', port=options.port)
-	app.run(host='0.0.0.0', port=5000)
-
+        app.run(host='0.0.0.0', port=options.port)
     else:
 	print "Running with SSL Encryption"
         from OpenSSL import SSL
         context = SSL.Context(SSL.SSLv23_METHOD)
-        context.use_privatekey_file('utils/keys/rsa_08-11-15.key')
-        context.use_certificate_file('utils/keys/rsa_08-11-15.crt')
-        #app.run(host='0.0.0.0', port=options.port, ssl_context=context)
-	app.run(host='0.0.0.0', port=5000, ssl_context=context)
+        context.use_privatekey_file('../utils/keys/rsa.key')
+        context.use_certificate_file('../utils/keys/rsa.crt')
+        app.run(host='0.0.0.0', port=options.port, ssl_context=context)
+

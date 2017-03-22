@@ -1,3 +1,8 @@
+#! /bin/sh
+
+## Clean Folder
+rm ./rsa*
+
 ##################################
 #What is the whole darned process?
 ##################################
@@ -38,9 +43,9 @@
 #openssl genrsa -des3 -out domain.tld.encrypted.key 1024
 
 #without a password
-d=$(date '+%m-%d-%y')
-echo $d
-openssl genrsa -out $dnsdomainname "rsa_$d.key"
+#d=$(date '+%m-%d-%y')
+#echo $d
+openssl genrsa -out $dnsdomainname "rsa.key"
 
 #If you created your private key with a password, you?ll want to complete the rest of the steps using a decrypted private key - else you?ll have to type in your password every time you use the certificate (ie: every time you start a daemon using that certificate.)
 
@@ -52,7 +57,7 @@ openssl genrsa -out $dnsdomainname "rsa_$d.key"
 ##########################
 
 #Create your Certificate Signing Request
-openssl req -new -key "rsa_$d.key" -out "rsa_$d.csr"
+openssl req -new -key "rsa.key" -out "rsa.csr"
 
 #####################################
 #Step Three: Create your Certificate
@@ -65,7 +70,7 @@ openssl req -new -key "rsa_$d.key" -out "rsa_$d.csr"
 #If you?d like to pay for someone to sign your certificates, do some research and find which one you want to use. Next, find their instructions for submitting your CSR file.
 
 #Self-Sign your Certificate
-openssl x509 -req -days 365 -in "rsa_$d.csr" -signkey "rsa_$d.key" -out "rsa_$d.crt"
+openssl x509 -req -days 365 -in "rsa.csr" -signkey "rsa.key" -out "rsa.crt"
 
 #If you do happen to want to setup your own certificate authority, check these resources out:
 #
@@ -78,4 +83,4 @@ openssl x509 -req -days 365 -in "rsa_$d.csr" -signkey "rsa_$d.key" -out "rsa_$d.
 
 #Many daemons use a PEM file. Directions on how to generate such a PEM file can be hard to come by. I have had pretty good success with combining the .key and the .crt file together:
 
-cat "rsa_$d.key" "rsa_$d.crt" > "rsa_$d.pem"
+cat "rsa.key" "rsa.crt" > "rsa.pem"

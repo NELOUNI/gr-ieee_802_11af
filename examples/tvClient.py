@@ -1,9 +1,9 @@
-import subprocess, os, sys
+import subprocess, os, sys, platform
 try:
 	subprocess.call("ps aux | grep nae | grep -e 'tx_samples_from_file' | awk '{print $2}' | xargs kill -9")
 except OSError as e:
 	print >>sys.stderr, "Execution failed", e
-
+sys.path.append("./WSDB")
 import signal, atexit, time
 from gnuradio.eng_option import eng_option
 import webServerWSDB
@@ -22,8 +22,8 @@ if __name__ == '__main__':
         parser.add_option("-g","--gain"            , default=10, help="[default=%default]")
         parser.add_option("-B","--no-dB-update"    , action="store_true", default=False, help="Do not update the local spectrum database [default=%default]")
         parser.add_option("-v","--verbose"         , action="store_true", default=False, help="[default=%default]")
-        parser.add_option(""  ,"--uhd-dir"         , default=os.getenv("GNURADIO")+"/lib64", help="installation directory of uhd, [default=%default]")
-        parser.add_option("-c","--video"           , help="location of the video to play back, [default=%default]", default=os.getenv("HOME")+"/capture/wusa_s6p25M_short_3")
+	parser.add_option("-d","--uhd-dir"         , default=os.getenv("HOME")+"/uhd", help="installation directory of uhd, [default=%default]")
+        parser.add_option("-c","--video"           , help="location of the video to play back, [default=%default]", default=None)
         parser.add_option("-p","--port"            , help="port number to post to webServer, [default=%default]", default=5000)
         parser.add_option("-W","--web-server"      , help="webServer address, [default=%default]", default="127.0.0.1")
         parser.add_option("-s","--samp-rate"       , type="eng_float",   help="sample rate in MHz at which to play back the video, [default=%default]", default=6.25)
@@ -39,10 +39,9 @@ if __name__ == '__main__':
         if options.verbose: print "postdata_str: ", postdata_str
         c = pycurl.Curl()
 
-        c.setopt(pycurl.SSLCERT, "utils/keys/antd.nist.gov.crt")
-        c.setopt(pycurl.SSLKEY, "utils/keys/antd.nist.gov.pem")                   
-        c.setopt(pycurl.SSL_VERIFYPEER, 0)
-        c.setopt(pycurl.SSL_VERIFYHOST, 2)
+	c.setopt(pycurl.SSL_VERIFYPEER, 1)
+	c.setopt(pycurl.SSL_VERIFYHOST, 2)
+	c.setopt(pycurl.CAINFO, "utils/keys/rsa.crt")
 
         c.setopt(c.HTTPHEADER, ['Accept: application/json', 'Content-Type: application/json','charsets: utf-8'])
         c.setopt(c.URL, 'https://'+ options.web_server + ':'+str(options.port))
@@ -62,8 +61,12 @@ if __name__ == '__main__':
                             buf.close()
                             print json
         c.close()
-
-
-        subprocess.call(options.uhd_dir+'/uhd/examples/tx_samples_from_file --args ' + options.usrp_addr + ' --file ' + options.video + ' --type short --rate ' + str(rate) + ' --gain ' + options.gain + ' --freq ' + str(freq) + ' --repeat ', shell=True)
+	try:
+	    if os.path.isdir(options.uhd_dir+'/lib'):
+            	subprocess.call(options.uhd_dir+'/lib/uhd/examples/tx_samples_from_file --args ' + options.usrp_addr + ' --file ' + options.video + ' --type short --rate ' + str(rate) + ' --gain 0 --freq ' + str(freq) + ' --repeat ', shell=True)	
+	    else: 
+	    	subprocess.call(options.uhd_dir+'/lib64/uhd/examples/tx_samples_from_file --args ' + options.usrp_addr + ' --file ' + options.video + ' --type short --rate ' + str(rate) + ' --gain 0 --freq ' + str(freq) + ' --repeat ', shell=True)
+	except OSError as e:
+            print >>sys.stderr, "Execution failed", e
         ctx.pop()
 
