@@ -1,9 +1,8 @@
-USRP/GNU Radio Based IEEE 802.11af Implementation 
-=====================================================
-
-Hi!
+# USRP/GNU Radio Based IEEE 802.11af Implementation 
 
 This is an IEEE 802.11af O-QPSK transceiver for GNU Radio v3.7. It is based on the UCLA implementation (https://cgran.org/wiki/UCLAZigBee) of Thomas Schmid.
+
+# Features
 
 Currently, it features the following:
 
@@ -19,27 +18,33 @@ Some interesting properties:
 - It is interoperable with Contiki.
 - It uses a block to tag packet bursts with tx_sob and tx_eob tags. This tags are understood by the UHD blocks and allow fast switching between transmission and reception.
 
+# Dependencies
 
-Dependencies
-############
+Please note that ```apt-get``` is the package manager of Debian/Ubuntu based systems, while ```port``` is one package manager for OSX. So use either (not both) according to your needs.
 
-1. gr-ieee-802-11agp: https://github.com/bastibl/gr-ieee802-11.git
-(which depends on: gr-foo, log4cpp, itpp)
-2. dpkt: https://code.google.com/p/dpkt/downloads/list
-3. psutil: https://pypi.python.org/pypi/psutil#downloads 
+### gr-ieee-802-11agp
+	https://github.com/bastibl/gr-ieee802-11.git (depends on: gr-foo, log4cpp, itpp)
 
-4. iperf: [apt-get or yum]  install iperf
-or jperf: https://code.google.com/p/xjperf/
+### dpkt
+	https://code.google.com/p/dpkt/downloads/list
 
-5. flask: http://flask.pocoo.org/
+### psutil
+	https://pypi.python.org/pypi/psutil#downloads 
+
+### iperf/jperf 
+	https://code.google.com/p/xjperf/
+
+### flask
+	 http://flask.pocoo.org/
 	
-6. json: 
+### json 
 
-7. nmap (to enable ncat command)
+### nmap 
+	ncat command
 
-Quick Start
-###########
+# Installation
 
+## From Source
 2. Build and install gr-ieee-802-11af in your GNU Radio installation.
 	$ cd gr-ieee_802_11af
 	$ mkdir build
@@ -47,32 +52,23 @@ Quick Start
 	$ cmake [optional switches] ../
 	$ make && make test
 	$ sudo make install
+    	$ sudo ldconfig
 
-Command Line Options
-####################
+## Using PyBOMBS
 
-* tvClient.py:
-++++++++++++++
+# Checking you installation
 
-* webServerWSDB.py:
-+++++++++++++++++++
+## Troubleshooting
 
-Master/Slave common options:
-++++++++++++++++++++++++++++
+# Usage
 
-* masterTunnel.py:
-++++++++++++++++++
+If using ssh and a normal user user want to run the GUI "main_GUI.py" using sudo, first make sure to allow X11 authentication:
+	sudo xauth add $(xauth -f ~/.Xauthority list|tail -1)
 
-* slaveTunnel.py:
-+++++++++++++++++
 
-Notes
-#####
 * Tested with GNU Radio 3.7.6 and Python 2.6 and 2.7.
 
-Testing with iperf/jperf
-########################
-
+## Testing with iperf/jperf
 
 Virtual ethernet interfaces (tap0 for slave, tap1 for master), relays packets between the interfaces
 and the GNU Radio PHY+MAC. Use the Universal TUN/TAP device driver to move packets to/from kernel
@@ -83,16 +79,24 @@ Measuring the Master/Slave throughput in the context of secondaries vacating the
 Run the master.py and slave.py, one on each machine. 
 sudo rights are needed, to create the virtual interface, configure, turn it up and create raw socket to test the flow of data over the link.
 
-Known Bugs
-##########
+## Command Line Options
 
-### Usage
+### tvClient.py:
 
-Open the examples/transceiver.grc flow graph with gnuradio-companion and check if all blocks are connected. Enable either the UHD blocks to interface with real hardware or the Packet Pad block to loop back the samples. Open some Rime connections and connect messages sources or Socket PDUs. You can easily connect to the Socket PDU blocks with netcat. Netcat can be started for example with
+### webServerWSDB.py:
 
-nc -u localhost 52001
+### Master/Slave common options:
 
-There are also startup scripts in the apps folder.
+### masterTunnel.py:
 
-Have fun!
+### slaveTunnel.py:
 
+# Troubleshooting
+
+# Asking for help
+
+# Known Bugs
+
+# Disclaimers
+
+# Future Work
